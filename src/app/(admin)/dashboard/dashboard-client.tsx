@@ -5,11 +5,12 @@ import type { AdminStats, RevenuePoint, AdminOrderItem, Period } from "@/types/a
 import { KpiCard, KpiCardSkeleton } from "@/components/admin/kpi-card"
 import { PeriodSelector } from "@/components/admin/period-selector"
 import { RecentOrdersTable } from "@/components/admin/recent-orders-table"
+import { AlertsPanel } from "@/components/admin/alerts-panel"
 import dynamic from "next/dynamic"
 
 const RevenueChart = dynamic(
   () => import("@/components/admin/revenue-chart").then((m) => m.RevenueChart),
-  { ssr: false, loading: () => <div className="h-80 animate-pulse rounded-xl bg-muted" /> }
+  { ssr: false, loading: () => <div className="h-80 animate-pulse rounded-xl bg-card" /> }
 )
 
 async function fetchJson<T>(url: string): Promise<T> {
@@ -84,10 +85,10 @@ export default function DashboardClient() {
   }, [period])
 
   return (
-    <div className="space-y-6 p-6">
+    <div className="space-y-8 p-6">
       <div>
-        <h1 className="text-2xl font-bold">แดชบอร์ด</h1>
-        <p className="text-sm text-muted-foreground">ภาพรวมร้านค้าของคุณ</p>
+        <h1 className="text-2xl font-semibold text-foreground">แดชบอร์ด</h1>
+        <p className="mt-1 text-sm text-muted-foreground">ภาพรวมร้านค้าของคุณ</p>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -99,11 +100,11 @@ export default function DashboardClient() {
             <KpiCardSkeleton />
           </>
         ) : statsError ? (
-          <div className="col-span-full flex items-center justify-between rounded-xl border p-4">
+          <div className="col-span-full flex items-center justify-between rounded-xl border border-border bg-card p-5">
             <p className="text-sm text-destructive">{statsError}</p>
             <button
               onClick={() => window.location.reload()}
-              className="rounded-lg bg-primary px-4 py-2 text-sm text-primary-foreground"
+              className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/80"
             >
               ลองใหม่
             </button>
@@ -136,24 +137,34 @@ export default function DashboardClient() {
         ) : null}
       </div>
 
-      <div className="space-y-4">
-        <div className="flex items-center justify-between">
-          <h2 className="text-lg font-semibold">รายได้</h2>
-          <PeriodSelector value={period} onChange={setPeriod} />
+      <div className="grid gap-6 lg:grid-cols-12">
+        <div className="space-y-4 lg:col-span-8">
+          <div className="flex items-center justify-between">
+            <h2 className="text-xl font-semibold text-foreground">รายได้</h2>
+            <PeriodSelector value={period} onChange={setPeriod} />
+          </div>
+          {revenueLoading ? (
+            <div className="h-80 animate-pulse rounded-xl bg-card" />
+          ) : (
+            <div className="rounded-xl border border-border bg-card p-5">
+              <RevenueChart data={revenue} />
+            </div>
+          )}
         </div>
-        {revenueLoading ? (
-          <div className="h-80 animate-pulse rounded-xl bg-muted" />
-        ) : (
-          <RevenueChart data={revenue} />
-        )}
+
+        <div className="space-y-4 lg:col-span-4">
+          <AlertsPanel orders={orders} />
+        </div>
       </div>
 
       <div className="space-y-4">
-        <h2 className="text-lg font-semibold">ออเดอร์ล่าสุด</h2>
+        <h2 className="text-xl font-semibold text-foreground">ออเดอร์ล่าสุด</h2>
         {ordersLoading ? (
-          <div className="h-48 animate-pulse rounded-xl bg-muted" />
+          <div className="h-48 animate-pulse rounded-xl bg-card" />
         ) : (
-          <RecentOrdersTable orders={orders} />
+          <div className="rounded-xl border border-border bg-card p-5">
+            <RecentOrdersTable orders={orders} />
+          </div>
         )}
       </div>
     </div>

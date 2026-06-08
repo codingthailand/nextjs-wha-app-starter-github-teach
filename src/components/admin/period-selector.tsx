@@ -15,16 +15,16 @@ export function PeriodSelector({
   onChange: (value: Period) => void
 }) {
   return (
-    <div className="flex overflow-hidden rounded-lg border">
+    <div className="flex gap-2">
       {options.map((opt) => (
         <button
           key={opt.value}
           onClick={() => onChange(opt.value)}
           className={cn(
-            "px-4 py-2 text-sm font-medium transition-colors",
+            "rounded-lg px-3 py-1.5 text-sm font-medium transition-colors",
             value === opt.value
               ? "bg-primary text-primary-foreground"
-              : "bg-background text-muted-foreground hover:bg-muted"
+              : "bg-card text-muted-foreground hover:text-foreground"
           )}
         >
           {opt.label}

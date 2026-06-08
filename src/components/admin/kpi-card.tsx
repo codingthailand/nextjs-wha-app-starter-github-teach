@@ -39,12 +39,12 @@ export function KpiCard({
 }) {
   const Icon = iconMap[icon]
   return (
-    <div className="rounded-xl border bg-card p-4 text-card-foreground shadow-sm">
+    <div className="rounded-xl border border-border bg-card p-5 shadow-sm">
       <div className="flex items-center justify-between">
         <p className="text-sm text-muted-foreground">{label}</p>
         {Icon && <Icon className="size-5 text-muted-foreground" />}
       </div>
-      <p className="mt-2 text-2xl font-bold">
+      <p className="mt-2 font-bold text-foreground" style={{ fontFamily: "var(--font-mono)", fontSize: "32px", lineHeight: "1.2" }}>
         {formatCurrency ? formatTHB(value) : formatNumber(value)}
       </p>
       {subtitle && (
@@ -56,12 +56,12 @@ export function KpiCard({
 
 export function KpiCardSkeleton() {
   return (
-    <div className="rounded-xl border bg-card p-4 shadow-sm">
+    <div className="rounded-xl border border-border bg-card p-5 shadow-sm">
       <div className="flex items-center justify-between">
         <div className="h-4 w-24 animate-pulse rounded bg-muted" />
         <div className="size-5 animate-pulse rounded bg-muted" />
       </div>
-      <div className="mt-2 h-8 w-28 animate-pulse rounded bg-muted" />
+      <div className="mt-2 h-9 w-28 animate-pulse rounded bg-muted" />
       <div className="mt-1 h-3 w-20 animate-pulse rounded bg-muted" />
     </div>
   )
