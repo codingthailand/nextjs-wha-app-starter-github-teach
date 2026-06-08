@@ -66,6 +66,7 @@ export default function RegisterForm() {
       name: data.name,
       email: data.email,
       password: data.password,
+      role: "user",
      }, {
         onSuccess: () => {
           alert('สมัครสมาชิกสำเร็จ');
