@@ -18,6 +18,54 @@ src/app/api/contact/
 
 ---
 
+## Layout & Responsive
+
+**Desktop** — 2 คอลัมน์ side-by-side:
+```
+┌──────────────────┬──────────────────────────┐
+│  ข้อมูลติดต่อ   │   Form                   │
+│  - email         │   ชื่อ [          ]      │
+│  - เบอร์โทร     │   Email [          ]      │
+│  - เวลาทำการ    │   ข้อความ [          ]   │
+│                  │   [  ส่งข้อความ  ]       │
+└──────────────────┴──────────────────────────┘
+```
+- ใช้ Tailwind: `grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12`
+- คอลัมน์ซ้าย (info) แคบกว่า: `md:grid-cols-[1fr_1.6fr]`
+
+**Mobile** — stack เดี่ยว ลงมาตามลำดับ:
+```
+heading + sub
+─────────────
+contact info (icon + text แนวนอน)
+─────────────
+form stacked ทุก field
+[ส่งข้อความ — full width]
+```
+
+---
+
+## UI Details
+
+**Contact Info Block (คอลัมน์ซ้าย):**
+- icon + text แต่ละแถว ใช้ Lucide icons: `Mail`, `Phone`, `Clock`
+- ข้อความ secondary color (`text-muted-foreground`)
+- มี `<Separator />` คั่นก่อน paragraph อธิบาย
+
+**Form (คอลัมน์ขวา):**
+- ทุก field ใช้ `FormField` + `FormLabel` + `FormControl` + `FormMessage` จาก shadcn
+- `name` — `<Input placeholder="กรอกชื่อของคุณ">`
+- `email` — `<Input type="email" placeholder="example@email.com">`
+- `message` — `<Textarea rows={5} placeholder="พิมพ์ข้อความที่ต้องการ...">`
+- Submit button — `w-full` เสมอ (ทั้ง desktop และ mobile)
+
+**Success State** (หลัง submit สำเร็จ):
+- ซ่อน form ทั้งหมด
+- แสดง icon `CheckCircle` + ข้อความยืนยัน + ปุ่ม "ส่งข้อความอีกครั้ง"
+- center ทั้ง block ด้วย `flex flex-col items-center text-center gap-4 py-8`
+
+---
+
 ## Zod Schema (ใช้ร่วมกัน client + server)
 
 ```ts
@@ -37,65 +85,41 @@ export type ContactFormValues = z.infer<typeof contactSchema>
 
 ## Route Handler — `POST /api/contact`
 
-- ไม่ต้อง auth guard (public endpoint)
+- ไม่มี auth guard (public)
 - Validate ด้วย `contactSchema.safeParse(body)`
-- ส่ง email ผ่าน SMTP ด้วย **Resend**
-- Rate limit อย่างง่าย: ตรวจ header `x-forwarded-for` หรือ IP — optional ถ้าไม่มี middleware
+- ส่ง email ผ่าน (SMTP) ด้วย Resend เท่านั้น
 
-**Environment variables ที่ต้องเพิ่มใน `.env`:**
+**Environment variables:**
 ```
-# หรือ Resend
-RESEND_API_KEY=
+SMTP_HOST=
+SMTP_PORT=587
+SMTP_USER=
+SMTP_PASS=
+CONTACT_RECEIVER_EMAIL=
 ```
 
-**Response format:**
+**Response:**
 ```ts
 type ApiResponse<T> = { success: true; data: T } | { success: false; error: string }
-// success → { success: true, data: { message: 'ส่งข้อความสำเร็จ' } }
 ```
 
 ---
 
-## ContactForm Component
+## ContactForm — Constraints
 
-```
-Fields:
-  name    → Input (register)
-  email   → Input type="email" (register)
-  message → Textarea rows=5 (register)
-
-Submit flow:
-  handleSubmit(values) → fetch POST /api/contact → toast.success / toast.error
-  ถ้า success → form.reset() + แสดง success state แทน form
-```
-
-**Constraints:**
-- `useTransition` สำหรับ pending state บน submit button
-- ถ้า success ให้ซ่อน form แล้วแสดง success message พร้อมปุ่ม "ส่งข้อความอีกครั้ง"
-- shadcn Form + FormField + FormMessage สำหรับ error display
-- Toast จาก Sonner สำหรับ network error เท่านั้น (validation error แสดงใต้ field ปกติ)
-
----
-
-## page.tsx
-
-Server Component ธรรมดา — ไม่ check session เพราะ public
-```tsx
-export default function ContactPage() {
-  return (
-    <main>
-      {/* heading + contact info */}
-      <ContactForm />
-    </main>
-  )
-}
-```
+- `useTransition` สำหรับ pending state
+- validation error แสดงใต้ field ด้วย `<FormMessage>`
+- network/server error ใช้ `toast.error()` จาก Sonner
+- `form.reset()` หลัง submit สำเร็จ แล้วเปลี่ยนเป็น success state
 
 ---
 
 ## Install (ถ้ายังไม่มี)
 
 ```bash
-ให้ใช้ resend เท่านั้น
 npm install resend
+npx shadcn@latest add separator
 ```
+
+## หลังจากทำเสร็จแล้วให้เพิ่มเมนู "ติดต่อเรา"
+ที่ไฟล์ @src/components/nav-menu.tsx
