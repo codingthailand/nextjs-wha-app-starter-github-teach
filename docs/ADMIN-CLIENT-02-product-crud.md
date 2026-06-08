@@ -61,7 +61,7 @@ if (count > 0) return 409 + error message บอกจำนวน
 
 ### File Structure
 ```
-src/app/(admin)/products/
+src/app/(admin)/dashboard/products/
 ├── page.tsx                  ← Server: check role → render <ProductsClient>
 ├── products-client.tsx       ← 'use client': list + search + pagination
 ├── product-form-modal.tsx    ← 'use client': react-hook-form (create/edit)
