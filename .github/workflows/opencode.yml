@@ -19,7 +19,7 @@ jobs:
       - name: Run opencode review
         uses: anomalyco/opencode/github@latest
         env:
-          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}   # ← อ้างจาก Secret เสมอ
+          DEEPSEEK_API_KEY: ${{ env.DEEPSEEK_API_KEY }}   # ← อ้างจาก Secret เสมอ
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           model: deepseek/deepseek-v4-flash
