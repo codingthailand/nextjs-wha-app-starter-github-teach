@@ -14,12 +14,12 @@ export default function Hero() {
           variant="secondary"
         >
           <Link href="#">
-            Just released v1.0.0 <ArrowUpRight className="ml-1 size-4" />
+            Just released v1.0.2 <ArrowUpRight className="ml-1 size-4" />
           </Link>
         </Badge>
 
         <h1 className="mx-auto mt-6 max-w-xl font-medium text-4xl tracking-[-0.04em] sm:text-[2.75rem] md:text-6xl/[1.2]">
-          Ship better UI without&nbsp;the&nbsp;hassle
+          สวัสดีครับ
         </h1>
         <p className="mx-auto mt-6 max-w-2xl text-muted-foreground text-xl md:text-2xl/normal">
           Instead of starting from scratch every time, use thoughtfully designed
