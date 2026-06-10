@@ -22,8 +22,7 @@ export default function Hero() {
           สวัสดีครับ
         </h1>
         <p className="mx-auto mt-6 max-w-2xl text-muted-foreground text-xl md:text-2xl/normal">
-          Instead of starting from scratch every time, use thoughtfully designed
-          blocks that give you a solid foundation for any UI.
+          สวัสดี WHA
         </p>
         <div className="mt-12 flex items-center justify-center gap-4">
           <Button className="rounded-full" size="lg">
