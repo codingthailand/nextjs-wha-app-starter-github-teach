@@ -35,7 +35,7 @@ export default function Hero() {
           >
             <CirclePlay className="h-5! w-5!" /> ดูตัวอย่าง
                         <CirclePlay className="h-5! w-5!" /> ดูตัวอย่าง
-                                                <CirclePlay className="h-5! w-5!" /> ดูตัวอย่าง 9
+                                                <CirclePlay className="h-5! w-5!" /> ดูตัวอย่าง 10
 
           </Button>
         </div>
