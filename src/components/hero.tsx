@@ -26,14 +26,14 @@ export default function Hero() {
         </p>
         <div className="mt-12 flex items-center justify-center gap-4">
           <Button className="rounded-full" size="lg">
-            Get Started <ArrowUpRight className="h-5! w-5!" />
+            เริ่มต้นเลย <ArrowUpRight className="h-5! w-5!" />
           </Button>
           <Button
             className="rounded-full shadow-none"
             size="lg"
             variant="outline"
           >
-            <CirclePlay className="h-5! w-5!" /> Watch Demo
+            <CirclePlay className="h-5! w-5!" /> ดูตัวอย่าง
           </Button>
         </div>
       </div>
