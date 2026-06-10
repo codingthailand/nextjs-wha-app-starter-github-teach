@@ -1,55 +1,42 @@
 name: opencode
 
 on:
-  issue_comment:
-    types: [created]
-  pull_request_review_comment:
-    types: [created]
   pull_request:
     types: [opened, synchronize, reopened, ready_for_review]
 
 jobs:
-  # ---------- Job 1: สั่งงานผ่าน comment (/oc, /opencode) ----------
-  opencode-comment:
-    if: |
-      (github.event_name == 'issue_comment' ||
-       github.event_name == 'pull_request_review_comment') &&
-      (contains(github.event.comment.body, '/oc') ||
-       contains(github.event.comment.body, '/opencode'))
-    runs-on: ubuntu-latest
-    permissions:
-      id-token: write
-      contents: write        # สร้าง branch / commit โค้ดแก้
-      pull-requests: write   # เปิด PR / comment บน PR
-      issues: write          # comment + reaction บน issue
-    steps:
-      - uses: actions/checkout@v6
-        with:
-          persist-credentials: false
-
-      - uses: anomalyco/opencode/github@latest
-        env:
-          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          model: deepseek/deepseek-v4-flash
-          use_github_token: true
-
-  # ---------- Job 2: Auto Review ทุกครั้งที่ PR เปิด/อัปเดต ----------
+  # ---------- Auto Review ทุกครั้งที่ PR เปิด/อัปเดต ----------
   opencode-review:
-    if: github.event_name == 'pull_request' && !github.event.pull_request.draft
+    if: ${{ !github.event.pull_request.draft }}
     runs-on: ubuntu-latest
     permissions:
       id-token: write
       contents: read         # review อ่านอย่างเดียวพอ
-      pull-requests: write   # ← ต้อง write ถึงจะโพสต์ผล review ได้
-      issues: write          # ← reaction/comment ใช้ Issues API
+      pull-requests: write   # ต้อง write ถึงจะโพสต์ผล review ได้
+      issues: write          # reaction/comment ใช้ Issues API
     steps:
       - uses: actions/checkout@v6
         with:
           persist-credentials: false
 
-      - uses: anomalyco/opencode/github@latest
+      # Step ทดสอบ key (แยกเป็น step ของตัวเอง — ใช้ run:)
+      # พิสูจน์แล้วว่า key ใช้ได้ ลบ step นี้ทิ้งได้เลย
+      - name: Test DeepSeek API key
+        env:
+          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
+        run: |
+          STATUS=$(curl -s -o /tmp/resp.json -w "%{http_code}" \
+            https://api.deepseek.com/chat/completions \
+            -H "Authorization: Bearer ${DEEPSEEK_API_KEY}" \
+            -H "Content-Type: application/json" \
+            -d '{"model":"deepseek-v4-flash","messages":[{"role":"user","content":"hi"}],"max_tokens":5}')
+          echo "HTTP Status: $STATUS"
+          cat /tmp/resp.json
+          [ "$STATUS" = "200" ] || exit 1
+
+      # Step OpenCode (ใช้ uses: — ไม่มี run:)
+      - name: Run opencode review
+        uses: anomalyco/opencode/github@latest
         env:
           DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
