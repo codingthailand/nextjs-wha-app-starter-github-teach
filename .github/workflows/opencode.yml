@@ -48,4 +48,4 @@ jobs:
             - Check for code quality issues
             - Look for potential bugs
             - Suggest improvements
-            ตอบเป็นภาษาไทย กระชับ รายงานเฉพาะปัญหาที่มั่นใจจริง
+            - ตอบเป็นภาษาไทย กระชับ รายงานเฉพาะปัญหาที่มั่นใจจริง
