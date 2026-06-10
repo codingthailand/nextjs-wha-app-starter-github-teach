@@ -1,44 +1,25 @@
 name: opencode
-
 on:
   pull_request:
     types: [opened, synchronize, reopened, ready_for_review]
-
 jobs:
-  # ---------- Auto Review ทุกครั้งที่ PR เปิด/อัปเดต ----------
   opencode-review:
     if: ${{ !github.event.pull_request.draft }}
     runs-on: ubuntu-latest
     permissions:
       id-token: write
-      contents: read         # review อ่านอย่างเดียวพอ
-      pull-requests: write   # ต้อง write ถึงจะโพสต์ผล review ได้
-      issues: write          # reaction/comment ใช้ Issues API
+      contents: read
+      pull-requests: write
+      issues: write
     steps:
       - uses: actions/checkout@v6
         with:
           persist-credentials: false
 
-      # Step ทดสอบ key (แยกเป็น step ของตัวเอง — ใช้ run:)
-      # พิสูจน์แล้วว่า key ใช้ได้ ลบ step นี้ทิ้งได้เลย
-      - name: Test DeepSeek API key
-        env:
-          DEEPSEEK_API_KEY: 'sk-ae2df36f449842b782d86618830ff6e9'
-        run: |
-          STATUS=$(curl -s -o /tmp/resp.json -w "%{http_code}" \
-            https://api.deepseek.com/chat/completions \
-            -H "Authorization: Bearer ${DEEPSEEK_API_KEY}" \
-            -H "Content-Type: application/json" \
-            -d '{"model":"deepseek-v4-flash","messages":[{"role":"user","content":"hi"}],"max_tokens":5}')
-          echo "HTTP Status: $STATUS"
-          cat /tmp/resp.json
-          [ "$STATUS" = "200" ] || exit 1
-
-      # Step OpenCode (ใช้ uses: — ไม่มี run:)
       - name: Run opencode review
         uses: anomalyco/opencode/github@latest
         env:
-          DEEPSEEK_API_KEY: 'sk-ae2df36f449842b782d86618830ff6e9'
+          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}   # ← อ้างจาก Secret เสมอ
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           model: deepseek/deepseek-v4-flash
@@ -48,4 +29,4 @@ jobs:
             - Check for code quality issues
             - Look for potential bugs
             - Suggest improvements
-            - ตอบเป็นภาษาไทย กระชับ รายงานเฉพาะปัญหาที่มั่นใจจริง
+            ตอบเป็นภาษาไทย กระชับ รายงานเฉพาะปัญหาที่มั่นใจจริง
