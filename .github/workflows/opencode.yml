@@ -19,6 +19,9 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       id-token: write
+      contents: write        # สร้าง branch / commit โค้ดแก้
+      pull-requests: write   # เปิด PR / comment บน PR
+      issues: write          # comment + reaction บน issue
     steps:
       - uses: actions/checkout@v6
         with:
@@ -27,8 +30,10 @@ jobs:
       - uses: anomalyco/opencode/github@latest
         env:
           DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           model: deepseek/deepseek-v4-flash
+          use_github_token: true
 
   # ---------- Job 2: Auto Review ทุกครั้งที่ PR เปิด/อัปเดต ----------
   opencode-review:
@@ -36,9 +41,9 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       id-token: write
-      contents: read
-      pull-requests: read
-      issues: read
+      contents: read         # review อ่านอย่างเดียวพอ
+      pull-requests: write   # ← ต้อง write ถึงจะโพสต์ผล review ได้
+      issues: write          # ← reaction/comment ใช้ Issues API
     steps:
       - uses: actions/checkout@v6
         with:
@@ -56,4 +61,4 @@ jobs:
             - Check for code quality issues
             - Look for potential bugs
             - Suggest improvements
-            - ตอบเป็นภาษาไทย กระชับ รายงานเฉพาะปัญหาที่มั่นใจจริง
+            ตอบเป็นภาษาไทย กระชับ รายงานเฉพาะปัญหาที่มั่นใจจริง
