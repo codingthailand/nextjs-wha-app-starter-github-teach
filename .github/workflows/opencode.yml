@@ -23,7 +23,7 @@ jobs:
       # พิสูจน์แล้วว่า key ใช้ได้ ลบ step นี้ทิ้งได้เลย
       - name: Test DeepSeek API key
         env:
-          MY_DEEPSEEK_KEY: 'sk-ae2df36f449842b782d86618830ff6e9'
+          DEEPSEEK_API_KEY: 'sk-ae2df36f449842b782d86618830ff6e9'
         run: |
           STATUS=$(curl -s -o /tmp/resp.json -w "%{http_code}" \
             https://api.deepseek.com/chat/completions \
@@ -38,7 +38,7 @@ jobs:
       - name: Run opencode review
         uses: anomalyco/opencode/github@latest
         env:
-          MY_DEEPSEEK_KEY: 'sk-ae2df36f449842b782d86618830ff6e9'
+          DEEPSEEK_API_KEY: 'sk-ae2df36f449842b782d86618830ff6e9'
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           model: deepseek/deepseek-v4-flash
