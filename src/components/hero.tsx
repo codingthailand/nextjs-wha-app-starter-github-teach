@@ -21,6 +21,12 @@ export default function Hero() {
         <h1 className="mx-auto mt-6 max-w-xl font-medium text-4xl tracking-[-0.04em] sm:text-[2.75rem] md:text-6xl/[1.2]">
           สวัสดีครับ ยินดีต้อนรับสู่เว็บไซต์ของเรา!
         </h1>
+        <h1 className="mx-auto mt-6 max-w-xl font-medium text-4xl tracking-[-0.04em] sm:text-[2.75rem] md:text-6xl/[1.2]">
+          สวัสดีครับ ยินดีต้อนรับสู่เว็บไซต์ของเรา!
+        </h1>
+                <h1 className="mx-auto mt-6 max-w-xl font-medium text-4xl tracking-[-0.04em] sm:text-[2.75rem] md:text-6xl/[1.2]">
+          สวัสดีครับ ยินดีต้อนรับสู่เว็บไซต์ของเรา!
+        </h1>
         <p className="mx-auto mt-6 max-w-2xl text-muted-foreground text-xl md:text-2xl/normal">
           สวัสดี WHA
         </p>
